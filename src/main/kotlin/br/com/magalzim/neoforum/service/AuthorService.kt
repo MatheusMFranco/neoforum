@@ -1,20 +1,14 @@
 package br.com.magalzim.neoforum.service
 
 import br.com.magalzim.neoforum.model.*
-import br.com.magalzim.neoforum.repository.BoardRepository
+import br.com.magalzim.neoforum.repository.AuthorRepository
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 
-import java.util.*
-
 @Service
-class BoardService(private val repository: BoardRepository) {
+class AuthorService(private val repository: AuthorRepository) {
 
-    fun list(): List<Board> {
-        return repository.findAll()
-    }
-
-    fun findById(id: Long?): Board {
+    fun findById(id: Long?): Author {
         if (id != null) {
             return repository.getReferenceById(id)
         }

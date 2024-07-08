@@ -1,11 +1,17 @@
 package br.com.magalzim.neoforum.model
 
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
+@Entity
 data class Answer(
-    val id: Long?,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
     val message: String,
     val registerDate: LocalDateTime = LocalDateTime.now(),
-    val author: User,
+    @ManyToOne
+    val author: Author,
+    @ManyToOne
     val topic: Topic
 )

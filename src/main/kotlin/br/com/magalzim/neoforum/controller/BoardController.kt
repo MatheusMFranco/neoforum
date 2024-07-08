@@ -10,7 +10,7 @@ class BoardController {
 
     @GetMapping
     fun find(): String {
-        return "Hello World! ALTERADASSO!"
+        return "Board!"
     }
 
 }
