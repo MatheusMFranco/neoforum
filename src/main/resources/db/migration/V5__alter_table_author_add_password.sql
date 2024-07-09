@@ -1,0 +1,1 @@
+alter table author add column password text
