@@ -16,7 +16,7 @@ class TopicFormMapper(
             title = t.title.toString(),
             message = t.message.toString(),
             board = boardService.findById(t.boardId),
-            author = userService.findById(t.authorId)
+            author = userService.findById(t.authorId),
         )
     }
 }

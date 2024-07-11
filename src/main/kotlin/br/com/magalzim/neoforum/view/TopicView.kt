@@ -9,4 +9,5 @@ data class TopicView(
     val message: String,
     val registerDate: LocalDateTime,
     val status: TopicStatus,
+    val updateDate: LocalDateTime?
 )

@@ -31,10 +31,12 @@ class SecurityConfiguration (
             .authorizeHttpRequests {
                 it
                     .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/topics").hasAuthority("READ_AND_WRITE")
-                    //.requestMatchers(HttpMethod.POST, "/topics").hasAuthority("READ_AND_WRITE")
-                    //.requestMatchers(HttpMethod.PUT, "/topics").hasAuthority("READ_AND_WRITE")
-                    //.requestMatchers(HttpMethod.DELETE, "/topics").hasAuthority("READ_AND_WRITE")
+                    .requestMatchers(HttpMethod.POST, "/topics").hasAuthority("READ_AND_WRITE")
+                    .requestMatchers(HttpMethod.PUT, "/topics").hasAuthority("READ_AND_WRITE")
+                    .requestMatchers(HttpMethod.DELETE, "/topics").hasAuthority("READ_AND_WRITE")
                     .anyRequest().authenticated()
             }
             .addFilterBefore(JWTLoginFilter(authenticationManager = configuration.authenticationManager, jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass)

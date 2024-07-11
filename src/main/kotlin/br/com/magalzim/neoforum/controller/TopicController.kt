@@ -5,6 +5,7 @@ import br.com.magalzim.neoforum.form.UpdateTopicForm
 import br.com.magalzim.neoforum.service.TopicService
 import br.com.magalzim.neoforum.view.TopicByBoardView
 import br.com.magalzim.neoforum.view.TopicView
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
@@ -30,6 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
 @RequestMapping("/topics")
+@SecurityRequirement(name="bearerAuth")
 class TopicController(private val service: TopicService) {
 
     @GetMapping

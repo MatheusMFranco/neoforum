@@ -11,6 +11,7 @@ import br.com.magalzim.neoforum.view.TopicView
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class TopicService(
@@ -50,6 +51,7 @@ class TopicService(
                 .orElseThrow{NotFoundException(notFoundMessage)}
             model.title = dto.title.toString()
             model.message = dto.message.toString()
+            model.updateDate = LocalDateTime.now()
             return topicViewMapper.map(model)
         }
         throw Exception()
@@ -59,10 +61,8 @@ class TopicService(
         repository.deleteById(id)
     }
 
-
     fun forums(): List<TopicByBoardView> {
         return repository.forums()
     }
-
 
 }

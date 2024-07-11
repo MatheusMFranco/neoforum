@@ -1,18 +1,20 @@
 spring:
   datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:forum
-    username: sa
-    password:
+    driver className: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/neoforum
+    username: root
+    password: root
+    #driverClassName: org.h2.Driver
+    #url: jdbc:h2:mem:forum
+    #username: sa
+    #password:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-  h2:
-    console:
-      enable: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
 flyway.locations.filesystem: db/migration
 jwt:
   secret: secret
