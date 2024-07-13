@@ -8,6 +8,8 @@ import br.com.magalzim.neoforum.mapper.TopicViewMapper
 import br.com.magalzim.neoforum.repository.TopicRepository
 import br.com.magalzim.neoforum.view.TopicByBoardView
 import br.com.magalzim.neoforum.view.TopicView
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -21,6 +23,7 @@ class TopicService(
     private val notFoundMessage: String = "Topic Not Found"
 ) {
 
+    @Cacheable(cacheNames = ["topics"], key = "#root.method.name")
     fun list(
         title: String?,
         pagination: Pageable
@@ -39,12 +42,14 @@ class TopicService(
         return topicViewMapper.map(model)
     }
 
+    @CacheEvict(value=["topics"], allEntries = true)
     fun add(dto: NewTopicForm): TopicView {
         val topic = topicFormMapper.map(dto)
         repository.save(topic)
         return topicViewMapper.map(topic)
     }
 
+    @CacheEvict(value=["topics"], allEntries = true)
     fun update(dto: UpdateTopicForm): TopicView {
         if (dto.id != null) {
             val model = repository.findById(dto.id)
@@ -57,6 +62,7 @@ class TopicService(
         throw Exception()
     }
 
+    @CacheEvict(value=["topics"], allEntries = true)
     fun delete(id: Long) {
         repository.deleteById(id)
     }

@@ -1,6 +1,7 @@
 package br.com.magalzim.neoforum.view
 
 import br.com.magalzim.neoforum.model.TopicStatus
+import java.io.Serializable
 import java.time.LocalDateTime
 
 data class TopicView(
@@ -10,4 +11,4 @@ data class TopicView(
     val registerDate: LocalDateTime,
     val status: TopicStatus,
     val updateDate: LocalDateTime?
-)
+): Serializable

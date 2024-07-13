@@ -33,6 +33,8 @@ class SecurityConfiguration (
                     .requestMatchers(HttpMethod.POST, "/login").permitAll()
                     .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+                    .requestMatchers("/answers").hasAuthority("READ_AND_WRITE")
+                    .requestMatchers("/forums").hasAuthority("ADMIN")
                     .requestMatchers(HttpMethod.GET, "/topics").hasAuthority("READ_AND_WRITE")
                     .requestMatchers(HttpMethod.POST, "/topics").hasAuthority("READ_AND_WRITE")
                     .requestMatchers(HttpMethod.PUT, "/topics").hasAuthority("READ_AND_WRITE")

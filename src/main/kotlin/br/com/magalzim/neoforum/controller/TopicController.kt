@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -35,7 +36,6 @@ import org.springframework.web.util.UriComponentsBuilder
 class TopicController(private val service: TopicService) {
 
     @GetMapping
-    @Cacheable("topics")
     fun list(
         @RequestParam(required = false) title: String?,
         @PageableDefault(size = 5, sort = ["registerDate"], direction = Sort.Direction.DESC) pagination: Pageable,
@@ -50,7 +50,6 @@ class TopicController(private val service: TopicService) {
 
     @PostMapping
     @Transactional
-    @CacheEvict(value=["topics"], allEntries = true)
     fun add(
         @RequestBody @Valid topic: NewTopicForm,
         uriBuilder: UriComponentsBuilder
@@ -62,7 +61,6 @@ class TopicController(private val service: TopicService) {
 
     @PutMapping
     @Transactional
-    @CacheEvict(value=["topics"], allEntries = true)
     fun update(@RequestBody @Valid topic: UpdateTopicForm): ResponseEntity<TopicView>  {
         val view = service.update(topic)
         return ResponseEntity.ok(view)
@@ -71,7 +69,6 @@ class TopicController(private val service: TopicService) {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    @CacheEvict(value=["topics"], allEntries = true)
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }
