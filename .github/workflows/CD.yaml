@@ -32,15 +32,15 @@ jobs:
 
       - name: Login container registry
         env:
-          HEROKU_API_SECRET: ${{ secrets.HEROKU_API_SECRET }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_SECRET }}
         run: heroku container:login
 
       - name: Push container registry
         env:
-          HEROKU_API_SECRET: ${{ secrets.HEROKU_API_SECRET }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_SECRET }}
         run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web
 
       - name: Release container registry
         env:
-          HEROKU_API_SECRET: ${{ secrets.HEROKU_API_SECRET }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_SECRET }}
         run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web
