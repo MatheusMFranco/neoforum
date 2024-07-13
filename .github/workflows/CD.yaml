@@ -1,0 +1,46 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '22'
+
+      - name: Deps Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Run mvn clean
+        run: mvn clean
+
+      - name: Run mvn package
+        run: mvn package
+
+      - name: Login container registry
+        env:
+          HEROKU_API_SECRET: ${{ secrets.HEROKU_API_SECRET }}
+        run: heroku container:login
+
+      - name: Push container registry
+        env:
+          HEROKU_API_SECRET: ${{ secrets.HEROKU_API_SECRET }}
+        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web
+
+      - name: Release container registry
+        env:
+          HEROKU_API_SECRET: ${{ secrets.HEROKU_API_SECRET }}
+        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web
