@@ -1,23 +1,24 @@
 package br.com.magalzim.neoforum.controller
 
 import br.com.magalzim.neoforum.config.JWTUtil
+import br.com.magalzim.neoforum.configuration.DatabaseContainerConfiguration
 import br.com.magalzim.neoforum.model.AuthorTest
 import br.com.magalzim.neoforum.model.Role
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
+import org.testcontainers.junit.jupiter.Testcontainers
 
+@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TopicControllerTest {
+class TopicControllerTest: DatabaseContainerConfiguration() {
 
     @Autowired
     private lateinit var jwtUtil: JWTUtil
@@ -36,7 +37,6 @@ class TopicControllerTest {
     @BeforeEach
     fun setup() {
         token = generateToken()
-        println("Token:" + token.toString())
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .apply<DefaultMockMvcBuilder?>(
                 SecurityMockMvcConfigurers.springSecurity()
@@ -49,8 +49,8 @@ class TopicControllerTest {
     }
 
     @Test
-    fun `should return code 200 when call topics with token`() {
-        mockMvc.get(RESOURCE) {
+    fun `should return code 200 when call forums with token`() {
+        mockMvc.get(RESOURCE.plus("%s").format("/forums")) {
             headers { this.setBearerAuth(token.toString()) }
         }.andExpect { status { isOk() } }
     }
