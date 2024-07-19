@@ -1,33 +1,34 @@
 package br.com.magalzim.neoforum.service
 
-import br.com.magalzim.neoforum.model.*
+import br.com.magalzim.neoforum.form.NewAnswerForm
+import br.com.magalzim.neoforum.mapper.AnswerFormMapper
+import br.com.magalzim.neoforum.mapper.AnswerViewMapper
 import br.com.magalzim.neoforum.repository.AnswerRepository
-import jakarta.persistence.EntityNotFoundException
+import br.com.magalzim.neoforum.view.AnswerView
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-
-import java.util.*
 
 @Service
 class AnswerService(
     private val emailService: EmailService,
-    private val repository: AnswerRepository
+    private val repository: AnswerRepository,
+    private val answerViewMapper: AnswerViewMapper,
+    private val answerFormMapper: AnswerFormMapper
 ) {
-
-    fun list(): List<Answer> {
-        return repository.findAll()
-    }
-
-    fun findById(id: Long?): Answer {
-        if (id != null) {
-            return repository.getReferenceById(id)
-        }
-        throw EntityNotFoundException()
-    }
-
-    fun add(answer: Answer) {
+    fun add(dto: NewAnswerForm): AnswerView {
+        val answer = answerFormMapper.map(dto)
         repository.save(answer)
-        val author = answer.topic.author.email
-        emailService.notify(author)
+        val author = answer.topic.author
+        emailService.notify(author.email)
+        return answerViewMapper.map(answer)
     }
 
+    fun list(
+        topicId: Long,
+        pagination: Pageable
+    ): Page<AnswerView> {
+        val messages = repository.findByTopicId(topicId, pagination)
+        return messages.map { answer -> answerViewMapper.map(answer) }
+    }
 }

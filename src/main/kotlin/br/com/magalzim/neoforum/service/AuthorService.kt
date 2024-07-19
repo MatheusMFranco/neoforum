@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class AuthorService(private val repository: AuthorRepository): UserDetailsService {
-
     fun findById(id: Long?): Author {
         if (id != null) {
             return repository.getReferenceById(id)
@@ -21,5 +20,4 @@ class AuthorService(private val repository: AuthorRepository): UserDetailsServic
         val author = repository.findByEmail(username)?: throw RuntimeException()
         return UserDetail(author)
     }
-
 }

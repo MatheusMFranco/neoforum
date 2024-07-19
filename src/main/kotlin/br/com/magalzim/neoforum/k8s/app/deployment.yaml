@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neoforum-app
+spec:
+  selector:
+    matchLabels:
+      app: neoforum-app
+  template:
+    metadata:
+      labels:
+        app: neoforum-app
+    spec:
+      containers:
+        - name: neoforum
+          image: matheusmagal/neoforum:v2
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MYSQL_HOST
+              value: mysql
+            - name: MYSQL_DATABASE
+              value: neoforum
+            - name: MYSQL_PASSWORD
+              value: root
+            - name: MYSQL_USERNAME
+              value: root
+            - name: REDIS_HOST
+              value: redis
+---

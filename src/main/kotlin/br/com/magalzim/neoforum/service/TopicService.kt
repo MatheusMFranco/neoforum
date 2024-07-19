@@ -5,9 +5,11 @@ import br.com.magalzim.neoforum.form.NewTopicForm
 import br.com.magalzim.neoforum.form.UpdateTopicForm
 import br.com.magalzim.neoforum.mapper.TopicFormMapper
 import br.com.magalzim.neoforum.mapper.TopicViewMapper
+import br.com.magalzim.neoforum.model.Topic
 import br.com.magalzim.neoforum.repository.TopicRepository
 import br.com.magalzim.neoforum.view.TopicByBoardView
 import br.com.magalzim.neoforum.view.TopicView
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -22,7 +24,6 @@ class TopicService(
     private val topicFormMapper: TopicFormMapper,
     private val notFoundMessage: String = "Topic Not Found"
 ) {
-
     @Cacheable(cacheNames = ["topics"], key = "#root.method.name")
     fun list(
         title: String?,
@@ -37,9 +38,14 @@ class TopicService(
     }
 
     fun findById(id: Long): TopicView {
-        val model = repository.findById(id)
-            .orElseThrow{NotFoundException(notFoundMessage)}
-        return topicViewMapper.map(model)
+        return topicViewMapper.map(find(id))
+    }
+
+    fun find(id: Long?): Topic {
+        if (id != null) {
+            return repository.getReferenceById(id)
+        }
+        throw NotFoundException(notFoundMessage)
     }
 
     @CacheEvict(value=["topics"], allEntries = true)
@@ -70,5 +76,4 @@ class TopicService(
     fun forums(): List<TopicByBoardView> {
         return repository.forums()
     }
-
 }

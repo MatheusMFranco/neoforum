@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+    tier: database
+spec:
+  selector:
+    app: mysql
+    tier: database
+  ports:
+    - port: 3306
+      targetPort: 3306
+  clusterIP: None # DNS is used, so clusterIP is not needed

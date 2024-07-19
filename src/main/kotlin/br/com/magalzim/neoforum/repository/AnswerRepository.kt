@@ -1,6 +1,11 @@
 package br.com.magalzim.neoforum.repository
 
-import br.com.magalzim.neoforum.model.Answer
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface AnswerRepository: JpaRepository<Answer, Long>
+import br.com.magalzim.neoforum.model.Answer
+
+interface AnswerRepository: JpaRepository<Answer, Long> {
+    fun findByTopicId(topicId: Long, pagination: Pageable): Page<Answer>
+}

@@ -9,7 +9,6 @@ import java.util.*
 
 @Service
 class BoardService(private val repository: BoardRepository) {
-
     fun list(): List<Board> {
         return repository.findAll()
     }
@@ -20,5 +19,4 @@ class BoardService(private val repository: BoardRepository) {
         }
         throw EntityNotFoundException()
     }
-
 }

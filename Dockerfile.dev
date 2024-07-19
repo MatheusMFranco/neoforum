@@ -1,0 +1,4 @@
+FROM eclipse-temurin:21
+EXPOSE 8080
+ADD /target/neoforum-0.0.1-SNAPSHOT.jar neoforum.jar
+ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "neoforum.jar"]

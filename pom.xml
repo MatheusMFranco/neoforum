@@ -6,13 +6,17 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.1</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>br.com.magalzim</groupId>
 	<artifactId>neoforum</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>neoforum</name>
-	<description>Demo project for Spring Boot</description>
+	<description>
+		Each forum has its own specific focus, jargon, and informal guidelines regarding what constitutes acceptable or typical conversation.
+		In any case, it's beneficial to understand how some of the major forums operate.
+		You never know when you might find it useful to visit!
+	</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -44,7 +48,6 @@
 		</dependencies>
 	</dependencyManagement>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -66,7 +69,6 @@
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -174,6 +176,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<version>1.13.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -214,13 +225,19 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>dev</id>
+			<id>local</id>
 			<properties>
-				<activatedProperties>dev</activatedProperties>
+				<activatedProperties>local</activatedProperties>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<activatedProperties>dev</activatedProperties>
+			</properties>
 		</profile>
 		<profile>
 			<id>prod</id>

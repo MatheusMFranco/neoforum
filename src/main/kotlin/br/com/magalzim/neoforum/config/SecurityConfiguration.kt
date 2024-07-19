@@ -1,5 +1,6 @@
 package br.com.magalzim.neoforum.config
 
+import br.com.magalzim.neoforum.model.UserRole
 import br.com.magalzim.neoforum.security.JWTAuthenticationFilter
 import br.com.magalzim.neoforum.security.JWTLoginFilter
 import org.springframework.context.annotation.Bean
@@ -23,7 +24,6 @@ class SecurityConfiguration (
     private val userDetailsService: UserDetailsService,
     private val jwtUtil: JWTUtil
 ){
-
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
@@ -33,12 +33,24 @@ class SecurityConfiguration (
                     .requestMatchers(HttpMethod.POST, "/login").permitAll()
                     .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
-                    .requestMatchers("/answers").hasAuthority("READ_AND_WRITE")
-                    .requestMatchers("/forums").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/topics").hasAuthority("READ_AND_WRITE")
-                    .requestMatchers(HttpMethod.POST, "/topics").hasAuthority("READ_AND_WRITE")
-                    .requestMatchers(HttpMethod.PUT, "/topics").hasAuthority("READ_AND_WRITE")
-                    .requestMatchers(HttpMethod.DELETE, "/topics").hasAuthority("READ_AND_WRITE")
+                    .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+
+                    .requestMatchers("/forums").hasAuthority(UserRole.READ_AND_WRITE.name)
+                    .requestMatchers("/topics/**").hasAuthority(UserRole.READ_AND_WRITE.name)
+                    .requestMatchers("/answers/**").hasAuthority(UserRole.READ_AND_WRITE.name)
+
+                    .requestMatchers("/premium/**").hasAuthority(UserRole.PREMIUM.name)
+
+                    .requestMatchers("/monitor/**").hasAuthority(UserRole.MONITOR.name)
+                    .requestMatchers(HttpMethod.PUT, "/boards/**").hasAuthority(UserRole.MONITOR.name)
+                    .requestMatchers(HttpMethod.PUT, "/answers/**").hasAuthority(UserRole.MONITOR.name)
+                    .requestMatchers(HttpMethod.PUT, "/topics/**").hasAuthority(UserRole.MONITOR.name)
+
+                    .requestMatchers("/authors").hasAuthority(UserRole.ADMIN.name)
+                    .requestMatchers("/boards/**").hasAuthority(UserRole.ADMIN.name)
+                    .requestMatchers(HttpMethod.GET, "/roles").hasAuthority(UserRole.ADMIN.name)
+                    .requestMatchers(HttpMethod.DELETE, "/answers/**").hasAuthority(UserRole.ADMIN.name)
+                    .requestMatchers(HttpMethod.DELETE, "/topics/**").hasAuthority(UserRole.ADMIN.name)
                     .anyRequest().authenticated()
             }
             .addFilterBefore(JWTLoginFilter(authenticationManager = configuration.authenticationManager, jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass)

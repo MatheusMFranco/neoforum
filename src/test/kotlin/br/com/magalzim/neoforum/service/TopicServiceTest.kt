@@ -56,7 +56,7 @@ class TopicServiceTest {
     fun `should throw not found exception when topic is not found`() {
         every { topicRepository.findById(any()) } returns Optional.empty()
         val current = assertThrows<NotFoundException> {
-            topicService.findById(1)
+            topicService.find(null)
         }
         Assertions.assertThat(current.message).isEqualTo("Topic Not Found")
     }

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class EmailService(private val javaMailSender: JavaMailSender) {
-
     fun notify(author: String) {
         val message = SimpleMailMessage()
         message.subject = "[Received Messages] Topic"
