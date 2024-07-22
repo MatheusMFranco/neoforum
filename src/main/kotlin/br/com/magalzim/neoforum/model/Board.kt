@@ -12,4 +12,5 @@ data class Board(
     val id: Long? = null,
     val name: String,
     val description: String,
+    val icon: String? = null
 )

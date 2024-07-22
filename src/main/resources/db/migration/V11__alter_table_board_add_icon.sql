@@ -1,0 +1,1 @@
+alter table board add column icon text
