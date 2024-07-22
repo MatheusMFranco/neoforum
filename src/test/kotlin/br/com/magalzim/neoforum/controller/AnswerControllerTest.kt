@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TopicControllerTest: DatabaseContainerConfiguration() {
+class AnswerControllerTest: DatabaseContainerConfiguration() {
 
     @Autowired
     private lateinit var jwtUtil: JWTUtil
@@ -31,7 +31,7 @@ class TopicControllerTest: DatabaseContainerConfiguration() {
     private var token: String? = null
 
     companion object {
-        private const val RESOURCE = "/topics"
+        private const val RESOURCE = "/answers"
     }
 
     @BeforeEach
@@ -44,19 +44,12 @@ class TopicControllerTest: DatabaseContainerConfiguration() {
     }
 
     @Test
-    fun `should return code 400 when call topics without token`() {
+    fun `should return code 400 when call answers without token`() {
         mockMvc.get(RESOURCE).andExpect { status { is4xxClientError() } }
     }
 
     @Test
-    fun `should return code 200 when call forums with token`() {
-        mockMvc.get(RESOURCE.plus("%s").format("/forums")) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { isOk() } }
-    }
-
-    @Test
-    fun `should return code 200 when call topics by id and authenticated user`() {
+    fun `should return code 200 when call answers with token`() {
         mockMvc.get(RESOURCE.plus("%s").format("/1")) {
             headers { this.setBearerAuth(token.toString()) }
         }.andExpect { status { isOk() } }

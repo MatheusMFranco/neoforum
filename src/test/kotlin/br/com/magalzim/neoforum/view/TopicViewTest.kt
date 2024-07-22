@@ -1,6 +1,7 @@
 package br.com.magalzim.neoforum.view
 
 import br.com.magalzim.neoforum.model.TopicStatus
+import br.com.magalzim.neoforum.util.DateUtil
 import java.time.LocalDateTime
 
 object TopicViewTest {
@@ -9,7 +10,7 @@ object TopicViewTest {
         title = "Vamos estourar!",
         message = "Será que este tópico vai explodir?",
         status = TopicStatus.EMPTY,
-        registerDate = LocalDateTime.now(),
-        updateDate = LocalDateTime.now()
+        registerDate = DateUtil.mock,
+        updateDate = DateUtil.mock
     )
 }

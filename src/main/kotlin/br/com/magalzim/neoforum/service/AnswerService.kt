@@ -18,10 +18,10 @@ class AnswerService(
 ) {
     fun add(dto: NewAnswerForm): AnswerView {
         val answer = answerFormMapper.map(dto)
-        repository.save(answer)
+        val savedAnswer = repository.save(answer)
         val author = answer.topic.author
         emailService.notify(author.email)
-        return answerViewMapper.map(answer)
+        return answerViewMapper.map(savedAnswer)
     }
 
     fun list(

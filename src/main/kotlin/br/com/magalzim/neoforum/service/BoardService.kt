@@ -5,8 +5,6 @@ import br.com.magalzim.neoforum.repository.BoardRepository
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 
-import java.util.*
-
 @Service
 class BoardService(private val repository: BoardRepository) {
     fun list(): List<Board> {

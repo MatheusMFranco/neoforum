@@ -1,15 +1,13 @@
 package br.com.magalzim.neoforum.view
 
-import br.com.magalzim.neoforum.model.TopicStatus
-import java.time.LocalDateTime
+import br.com.magalzim.neoforum.model.AuthorTest
+import br.com.magalzim.neoforum.util.DateUtil
 
 object AnswerViewTest {
-    fun build() = TopicView(
+    fun build() = AnswerView(
         id = 1,
-        title = "Vamos estourar!",
         message = "Será que este tópico vai explodir?",
-        status = TopicStatus.EMPTY,
-        registerDate = LocalDateTime.now(),
-        updateDate = LocalDateTime.now()
+        registerDate = DateUtil.mock,
+        author = AuthorTest.build().name,
     )
 }

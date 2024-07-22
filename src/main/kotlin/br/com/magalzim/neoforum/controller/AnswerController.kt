@@ -3,7 +3,6 @@ package br.com.magalzim.neoforum.controller
 import br.com.magalzim.neoforum.form.NewAnswerForm
 import br.com.magalzim.neoforum.service.AnswerService
 import br.com.magalzim.neoforum.view.AnswerView
-import br.com.magalzim.neoforum.view.TopicView
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
