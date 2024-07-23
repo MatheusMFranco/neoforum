@@ -1,7 +1,6 @@
 package br.com.magalzim.neoforum.model
 
 import br.com.magalzim.neoforum.util.DateUtil
-import java.time.LocalDateTime
 
 object AnswerTest {
     fun build() = Answer(

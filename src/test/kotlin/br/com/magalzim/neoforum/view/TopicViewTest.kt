@@ -2,7 +2,6 @@ package br.com.magalzim.neoforum.view
 
 import br.com.magalzim.neoforum.model.TopicStatus
 import br.com.magalzim.neoforum.util.DateUtil
-import java.time.LocalDateTime
 
 object TopicViewTest {
     fun build() = TopicView(

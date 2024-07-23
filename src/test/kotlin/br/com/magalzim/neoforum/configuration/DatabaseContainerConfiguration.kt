@@ -3,10 +3,13 @@ package br.com.magalzim.neoforum.configuration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.junit.jupiter.Container
+import java.time.Duration
 
+@SpringJUnitConfig
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 abstract class DatabaseContainerConfiguration {
 
@@ -17,6 +20,7 @@ abstract class DatabaseContainerConfiguration {
             withUsername("root")
             withPassword("root")
             withReuse(true)
+            withStartupTimeout(Duration.ofSeconds(60))
         }
 
         @Container

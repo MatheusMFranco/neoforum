@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AnswerControllerTest: DatabaseContainerConfiguration() {
+class ControllerTest: DatabaseContainerConfiguration() {
 
     @Autowired
     private lateinit var jwtUtil: JWTUtil
@@ -31,7 +31,8 @@ class AnswerControllerTest: DatabaseContainerConfiguration() {
     private var token: String? = null
 
     companion object {
-        private const val RESOURCE = "/answers"
+        private const val TOPIC_RESOURCE = "/topics"
+        private const val ANSWER_RESOURCE = "/answers/1"
     }
 
     @BeforeEach
@@ -44,13 +45,32 @@ class AnswerControllerTest: DatabaseContainerConfiguration() {
     }
 
     @Test
+    fun `should return code 400 when call topics without token`() {
+        mockMvc.get(TOPIC_RESOURCE).andExpect { status { is4xxClientError() } }
+    }
+
+    @Test
+    fun `should return code 200 when call forums with token`() {
+        mockMvc.get(TOPIC_RESOURCE.plus("%s").format("/forums")) {
+            headers { this.setBearerAuth(token.toString()) }
+        }.andExpect { status { isOk() } }
+    }
+
+    @Test
+    fun `should return code 200 when call topics by id and authenticated user`() {
+        mockMvc.get(TOPIC_RESOURCE.plus("%s").format("/1")) {
+            headers { this.setBearerAuth(token.toString()) }
+        }.andExpect { status { isOk() } }
+    }
+
+    @Test
     fun `should return code 400 when call answers without token`() {
-        mockMvc.get(RESOURCE).andExpect { status { is4xxClientError() } }
+        mockMvc.get(ANSWER_RESOURCE).andExpect { status { is4xxClientError() } }
     }
 
     @Test
     fun `should return code 200 when call answers with token`() {
-        mockMvc.get(RESOURCE.plus("%s").format("/1")) {
+        mockMvc.get(ANSWER_RESOURCE) {
             headers { this.setBearerAuth(token.toString()) }
         }.andExpect { status { isOk() } }
     }
