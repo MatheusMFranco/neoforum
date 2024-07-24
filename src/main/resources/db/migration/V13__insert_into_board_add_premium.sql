@@ -1,0 +1,1 @@
+insert into board(id, name, description, icon) values (11, 'Premium', 'exclusive board to premium users', 'premium');

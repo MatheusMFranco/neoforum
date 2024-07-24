@@ -6,14 +6,15 @@ import br.com.magalzim.neoforum.form.UpdateTopicForm
 import br.com.magalzim.neoforum.mapper.TopicFormMapper
 import br.com.magalzim.neoforum.mapper.TopicViewMapper
 import br.com.magalzim.neoforum.model.Topic
+import br.com.magalzim.neoforum.model.UserRole
 import br.com.magalzim.neoforum.repository.TopicRepository
 import br.com.magalzim.neoforum.view.TopicByBoardView
 import br.com.magalzim.neoforum.view.TopicView
-import jakarta.persistence.EntityNotFoundException
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -24,6 +25,13 @@ class TopicService(
     private val topicFormMapper: TopicFormMapper,
     private val notFoundMessage: String = "Topic Not Found"
 ) {
+
+    companion object {
+        const val EVERYONE: Long = 0
+        const val STAFF: Long = 1
+        const val PREMIUM: Long = 11
+    }
+
     @Cacheable(cacheNames = ["topics"], key = "#root.method.name")
     fun list(
         title: String?,
@@ -74,6 +82,16 @@ class TopicService(
     }
 
     fun forums(): List<TopicByBoardView> {
-        return repository.forums()
+        val roles = SecurityContextHolder
+                .getContext()
+                .authentication
+                .authorities
+                .map { it.authority }
+        val list = when {
+            roles.contains(UserRole.MONITOR.name) -> listOf(EVERYONE)
+            roles.contains(UserRole.PREMIUM.name) -> listOf(STAFF)
+            else -> listOf(STAFF, PREMIUM)
+        }
+        return repository.forums(list)
     }
 }
