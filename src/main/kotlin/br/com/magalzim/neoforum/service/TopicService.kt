@@ -22,8 +22,7 @@ import java.time.LocalDateTime
 class TopicService(
     private val repository: TopicRepository,
     private val topicViewMapper: TopicViewMapper,
-    private val topicFormMapper: TopicFormMapper,
-    private val notFoundMessage: String = "Topic Not Found"
+    private val topicFormMapper: TopicFormMapper
 ) {
 
     companion object {
@@ -53,7 +52,7 @@ class TopicService(
         if (id != null) {
             return repository.getReferenceById(id)
         }
-        throw NotFoundException(notFoundMessage)
+        throw NotFoundException(Topic::class)
     }
 
     @CacheEvict(value=["topics"], allEntries = true)
@@ -67,10 +66,12 @@ class TopicService(
     fun update(dto: UpdateTopicForm): TopicView {
         if (dto.id != null) {
             val model = repository.findById(dto.id)
-                .orElseThrow{NotFoundException(notFoundMessage)}
+                .orElseThrow{NotFoundException(Topic::class)}
             model.title = dto.title.toString()
             model.message = dto.message.toString()
+            model.status = dto.status!!
             model.updateDate = LocalDateTime.now()
+            repository.save(model)
             return topicViewMapper.map(model)
         }
         throw Exception()

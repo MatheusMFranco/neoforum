@@ -1,5 +1,6 @@
 package br.com.magalzim.neoforum.exception
 
 import java.lang.RuntimeException
+import kotlin.reflect.KClass
 
-class NotFoundException(message: String?): RuntimeException(message)
+class NotFoundException(entity: KClass<*>) : RuntimeException("${entity.simpleName} ID not found!")

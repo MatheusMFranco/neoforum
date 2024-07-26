@@ -1,6 +1,7 @@
 package br.com.magalzim.neoforum.service
 
 import br.com.magalzim.neoforum.exception.NotFoundException
+import br.com.magalzim.neoforum.form.UpdateTopicFormTest
 import br.com.magalzim.neoforum.mapper.TopicFormMapper
 import br.com.magalzim.neoforum.mapper.TopicViewMapper
 import br.com.magalzim.neoforum.model.Topic
@@ -36,12 +37,16 @@ class TopicServiceTest {
     private val forumsPremium = TopicByBoardViewTest.buildPremium()
     private val forumsEveryone = TopicByBoardViewTest.buildEveryone()
 
+    private val updatedTopic = TopicTest.updated()
+
     private val topicRepository: TopicRepository = mockk{
         every { findByTitle(any(), any()) } returns topics
         every { findAll(pagination) } returns topics
         every { forums(listOf(EVERYONE)) } returns forumsStaff
         every { forums(listOf(STAFF)) } returns forumsPremium
         every { forums(listOf(STAFF, PREMIUM)) } returns forumsEveryone
+        every { findById(any()) } returns Optional.of(updatedTopic)
+        every { save(any()) } returns updatedTopic
     }
 
     private val topicViewMapper: TopicViewMapper = mockk{
@@ -76,7 +81,7 @@ class TopicServiceTest {
         val current = assertThrows<NotFoundException> {
             topicService.find(null)
         }
-        Assertions.assertThat(current.message).isEqualTo("Topic Not Found")
+        Assertions.assertThat(current.message).isEqualTo("Topic ID not found!")
     }
 
     @Test
@@ -136,6 +141,13 @@ class TopicServiceTest {
             Assertions.assertThat(result[index].name).isEqualTo(it.name)
             Assertions.assertThat(result[index].amount).isEqualTo(it.amount)
         }
+    }
+
+    @Test
+    fun `should update topic`() {
+        every { topicViewMapper.map(any()) } returns TopicViewTest.updated()
+        val updatedAnswerView = topicService.update(UpdateTopicFormTest.build())
+        Assertions.assertThat(updatedAnswerView.title).isEqualTo("Este tópico vai explodir!")
     }
 
 }

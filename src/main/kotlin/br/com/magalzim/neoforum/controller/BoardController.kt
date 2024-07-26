@@ -1,16 +1,22 @@
 package br.com.magalzim.neoforum.controller
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import br.com.magalzim.neoforum.form.UpdateBoardForm
+import br.com.magalzim.neoforum.service.BoardService
+import br.com.magalzim.neoforum.view.BoardView
+import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/boards")
-class BoardController {
+class BoardController(private val service: BoardService) {
 
-    @GetMapping
-    fun find(): String {
-        return "Board!"
+    @PutMapping
+    @Transactional
+    fun update(@RequestBody @Valid board: UpdateBoardForm): ResponseEntity<BoardView> {
+        val view = service.update(board)
+        return ResponseEntity.ok(view)
     }
 
 }

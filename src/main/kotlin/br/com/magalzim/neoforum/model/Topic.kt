@@ -16,7 +16,7 @@ data class Topic(
     @ManyToOne
     val author: Author,
     @Enumerated(value = EnumType.STRING)
-    val status: TopicStatus = TopicStatus.EMPTY,
+    var status: TopicStatus = TopicStatus.EMPTY,
     @OneToMany(mappedBy = "topic")
     val answers: List<Answer> = ArrayList(),
     var updateDate: LocalDateTime? = null

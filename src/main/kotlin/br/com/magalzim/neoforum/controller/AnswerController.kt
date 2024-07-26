@@ -1,6 +1,7 @@
 package br.com.magalzim.neoforum.controller
 
 import br.com.magalzim.neoforum.form.NewAnswerForm
+import br.com.magalzim.neoforum.form.UpdateAnswerForm
 import br.com.magalzim.neoforum.service.AnswerService
 import br.com.magalzim.neoforum.view.AnswerView
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
@@ -18,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder
 @RequestMapping("/answers")
 @SecurityRequirement(name="bearerAuth")
 class AnswerController(private val service: AnswerService) {
+
     @PostMapping
     @Transactional
     fun add(
@@ -27,6 +29,13 @@ class AnswerController(private val service: AnswerService) {
         val view = service.add(answer)
         val uri = uriBuilder.path("/answers/${view.id}").build().toUri()
         return ResponseEntity.created(uri).body(view)
+    }
+
+    @PutMapping
+    @Transactional
+    fun update(@RequestBody @Valid answer: UpdateAnswerForm): ResponseEntity<AnswerView> {
+        val view = service.update(answer)
+        return ResponseEntity.ok(view)
     }
 
     @GetMapping("/{id}")

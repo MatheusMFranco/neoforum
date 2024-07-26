@@ -10,7 +10,7 @@ data class Board(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    val name: String,
-    val description: String,
-    val icon: String? = null
+    var name: String,
+    var description: String,
+    var icon: String? = null
 )
