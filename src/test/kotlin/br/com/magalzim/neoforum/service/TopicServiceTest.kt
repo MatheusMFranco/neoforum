@@ -41,6 +41,7 @@ class TopicServiceTest {
 
     private val topicRepository: TopicRepository = mockk{
         every { findByTitle(any(), any()) } returns topics
+        every { findByBoardId(any(), any()) } returns topics
         every { findAll(pagination) } returns topics
         every { forums(listOf(EVERYONE)) } returns forumsStaff
         every { forums(listOf(STAFF)) } returns forumsPremium
@@ -148,6 +149,14 @@ class TopicServiceTest {
         every { topicViewMapper.map(any()) } returns TopicViewTest.updated()
         val updatedAnswerView = topicService.update(UpdateTopicFormTest.build())
         Assertions.assertThat(updatedAnswerView.title).isEqualTo("Este tópico vai explodir!")
+    }
+
+    @Test
+    fun `should list topics by board`() {
+        topicService.list(1, pagination)
+        verify(exactly = 1) { topicRepository.findByBoardId(any(), any()) }
+        verify(exactly = 1) { topicViewMapper.map(any()) }
+        verify(exactly = 0) { topicRepository.findAll(pagination) }
     }
 
 }

@@ -8,6 +8,7 @@ import br.com.magalzim.neoforum.mapper.TopicViewMapper
 import br.com.magalzim.neoforum.model.Topic
 import br.com.magalzim.neoforum.model.UserRole
 import br.com.magalzim.neoforum.repository.TopicRepository
+import br.com.magalzim.neoforum.view.AnswerView
 import br.com.magalzim.neoforum.view.TopicByBoardView
 import br.com.magalzim.neoforum.view.TopicView
 import org.springframework.cache.annotation.CacheEvict
@@ -41,6 +42,14 @@ class TopicService(
         } else {
             repository.findByTitle(title, pagination)
         }
+        return topics.map { topic -> topicViewMapper.map(topic) }
+    }
+
+    fun list(
+        boardId: Long,
+        pagination: Pageable
+    ): Page<TopicView> {
+        val topics = repository.findByBoardId(boardId, pagination)
         return topics.map { topic -> topicViewMapper.map(topic) }
     }
 

@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.Query
 interface TopicRepository: JpaRepository<Topic, Long> {
     fun findByTitle(name: String, pagination: Pageable): Page<Topic>
 
+    fun findByBoardId(boardId: Long, pagination: Pageable): Page<Topic>
+
     @Query("SELECT new br.com.magalzim.neoforum.view.TopicByBoardView(board.name, count(t)) FROM Topic t JOIN t.board board WHERE board.id NOT IN :ids GROUP BY board.name")
     fun forums(@Param("ids") ids: List<Long> = emptyList()): List<TopicByBoardView>
 }

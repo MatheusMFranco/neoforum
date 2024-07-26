@@ -43,6 +43,14 @@ class TopicController(private val service: TopicService) {
         return service.list(title, pagination)
     }
 
+    @GetMapping("/board/{id}")
+    fun list(
+        @PathVariable id: Long,
+        @PageableDefault(size = 5, sort = ["registerDate"], direction = Sort.Direction.DESC) pagination: Pageable,
+    ): Page<TopicView> {
+        return service.list(id, pagination)
+    }
+
     @GetMapping("/{id}")
     fun findById(@PathVariable id: Long): TopicView {
         return service.findById(id)

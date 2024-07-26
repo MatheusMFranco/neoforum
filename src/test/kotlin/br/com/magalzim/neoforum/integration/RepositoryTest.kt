@@ -77,4 +77,11 @@ class RepositoryTest {
         val foundTopics = topicRepository.findByTitle(topic.title, PageRequest.of(0, 5))
         Assertions.assertThat(foundTopics).isNotEmpty
     }
+
+    @Test
+    fun `should list topics by board`() {
+        topicRepository.save(topic)
+        val foundTopics = topicRepository.findByBoardId(1, PageRequest.of(0, 5))
+        Assertions.assertThat(foundTopics).isNotEmpty
+    }
 }
