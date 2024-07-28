@@ -1,6 +1,6 @@
 package br.com.magalzim.neoforum.config
 
-import br.com.magalzim.neoforum.service.AuthorService
+import br.com.magalzim.neoforum.service.UserService
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
@@ -12,7 +12,7 @@ import java.util.*
 
 @Component
 class JWTUtil(
-    private val authorService: AuthorService
+    private val userService: UserService
 ) {
 
     @Value("\${jwt.secret}")
@@ -50,7 +50,7 @@ class JWTUtil(
             .parseSignedClaims(jwt)
             .payload
             .subject
-        val user = authorService.loadUserByUsername(username.toString())
+        val user = userService.loadUserByUsername(username.toString())
         return UsernamePasswordAuthenticationToken(username, null, user.authorities)
     }
 }

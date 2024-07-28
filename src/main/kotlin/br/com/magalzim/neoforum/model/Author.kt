@@ -1,6 +1,7 @@
 package br.com.magalzim.neoforum.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -16,11 +17,12 @@ data class Author(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    val name: String,
-    val email: String,
-    val avatar: String,
+    @Column(nullable = false, unique = true)
+    var email: String,
+    var name: String,
+    var avatar: String,
     val registerDate: LocalDate = LocalDate.now(),
-    val password: String,
+    var password: String?,
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -28,5 +30,5 @@ data class Author(
         joinColumns = [JoinColumn(name = "author_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    val role: List<Role> = mutableListOf()
+    var role: List<Role> = mutableListOf()
 )

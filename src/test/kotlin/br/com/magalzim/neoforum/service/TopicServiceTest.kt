@@ -6,7 +6,7 @@ import br.com.magalzim.neoforum.mapper.TopicFormMapper
 import br.com.magalzim.neoforum.mapper.TopicViewMapper
 import br.com.magalzim.neoforum.model.Topic
 import br.com.magalzim.neoforum.model.TopicTest
-import br.com.magalzim.neoforum.model.UserRole
+import br.com.magalzim.neoforum.model.UserRoleAuthority
 import br.com.magalzim.neoforum.repository.TopicRepository
 import br.com.magalzim.neoforum.service.TopicService.Companion.EVERYONE
 import br.com.magalzim.neoforum.service.TopicService.Companion.PREMIUM
@@ -100,7 +100,7 @@ class TopicServiceTest {
     fun `should return forums for staff`() {
         val securityContext: SecurityContext = mockk(relaxed = true)
         val authentication = mockk<Authentication>()
-        every { authentication.authorities } returns listOf(SimpleGrantedAuthority(UserRole.MONITOR.name))
+        every { authentication.authorities } returns listOf(SimpleGrantedAuthority(UserRoleAuthority.MONITOR.name))
         every { securityContext.authentication } returns authentication
         SecurityContextHolder.setContext(securityContext)
 
@@ -116,7 +116,7 @@ class TopicServiceTest {
     fun `should return forums for premium`() {
         val securityContext: SecurityContext = mockk(relaxed = true)
         val authentication = mockk<Authentication>()
-        every { authentication.authorities } returns listOf(SimpleGrantedAuthority(UserRole.PREMIUM.name))
+        every { authentication.authorities } returns listOf(SimpleGrantedAuthority(UserRoleAuthority.PREMIUM.name))
         every { securityContext.authentication } returns authentication
         SecurityContextHolder.setContext(securityContext)
 
@@ -132,7 +132,7 @@ class TopicServiceTest {
     fun `should return forums for everyone`() {
         val securityContext: SecurityContext = mockk(relaxed = true)
         val authentication = mockk<Authentication>()
-        every { authentication.authorities } returns listOf(SimpleGrantedAuthority(UserRole.READ_AND_WRITE.name))
+        every { authentication.authorities } returns listOf(SimpleGrantedAuthority(UserRoleAuthority.READ_AND_WRITE.name))
         every { securityContext.authentication } returns authentication
         SecurityContextHolder.setContext(securityContext)
 
@@ -147,8 +147,8 @@ class TopicServiceTest {
     @Test
     fun `should update topic`() {
         every { topicViewMapper.map(any()) } returns TopicViewTest.updated()
-        val updatedAnswerView = topicService.update(UpdateTopicFormTest.build())
-        Assertions.assertThat(updatedAnswerView.title).isEqualTo("Este tópico vai explodir!")
+        val updatedTopicView = topicService.update(UpdateTopicFormTest.build())
+        Assertions.assertThat(updatedTopicView.title).isEqualTo("Este tópico vai explodir!")
     }
 
     @Test

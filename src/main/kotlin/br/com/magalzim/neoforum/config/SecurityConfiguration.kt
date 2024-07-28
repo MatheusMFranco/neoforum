@@ -1,6 +1,6 @@
 package br.com.magalzim.neoforum.config
 
-import br.com.magalzim.neoforum.model.UserRole
+import br.com.magalzim.neoforum.model.UserRoleAuthority
 import br.com.magalzim.neoforum.security.JWTAuthenticationFilter
 import br.com.magalzim.neoforum.security.JWTLoginFilter
 import org.springframework.context.annotation.Bean
@@ -30,27 +30,31 @@ class SecurityConfiguration (
             .csrf { it.disable() }
             .authorizeHttpRequests {
                 it
+                    .requestMatchers(HttpMethod.POST, "/authors").permitAll()
                     .requestMatchers(HttpMethod.POST, "/login").permitAll()
                     .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
 
-                    .requestMatchers("/forums").hasAuthority(UserRole.READ_AND_WRITE.name)
-                    .requestMatchers("/topics/**").hasAuthority(UserRole.READ_AND_WRITE.name)
-                    .requestMatchers("/answers/**").hasAuthority(UserRole.READ_AND_WRITE.name)
+                    .requestMatchers(HttpMethod.PUT, "/authors").hasAuthority(UserRoleAuthority.READ_AND_WRITE.name)
+                    .requestMatchers(HttpMethod.GET, "/authors/{id}").hasAuthority(UserRoleAuthority.READ_AND_WRITE.name)
+                    .requestMatchers("/forums").hasAuthority(UserRoleAuthority.READ_AND_WRITE.name)
+                    .requestMatchers("/topics/**").hasAuthority(UserRoleAuthority.READ_AND_WRITE.name)
+                    .requestMatchers("/answers/**").hasAuthority(UserRoleAuthority.READ_AND_WRITE.name)
 
-                    .requestMatchers("/premium/**").hasAuthority(UserRole.PREMIUM.name)
+                    .requestMatchers("/premium/**").hasAuthority(UserRoleAuthority.PREMIUM.name)
 
-                    .requestMatchers("/monitor/**").hasAuthority(UserRole.MONITOR.name)
-                    .requestMatchers(HttpMethod.PUT, "/boards/**").hasAuthority(UserRole.MONITOR.name)
-                    .requestMatchers(HttpMethod.PUT, "/answers/**").hasAuthority(UserRole.MONITOR.name)
-                    .requestMatchers(HttpMethod.PUT, "/topics/**").hasAuthority(UserRole.MONITOR.name)
+                    .requestMatchers("/monitor/**").hasAuthority(UserRoleAuthority.MONITOR.name)
+                    .requestMatchers(HttpMethod.PUT, "/boards/**").hasAuthority(UserRoleAuthority.MONITOR.name)
+                    .requestMatchers(HttpMethod.PUT, "/answers/**").hasAuthority(UserRoleAuthority.MONITOR.name)
+                    .requestMatchers(HttpMethod.PUT, "/topics/**").hasAuthority(UserRoleAuthority.MONITOR.name)
 
-                    .requestMatchers("/authors").hasAuthority(UserRole.ADMIN.name)
-                    .requestMatchers("/boards/**").hasAuthority(UserRole.ADMIN.name)
-                    .requestMatchers(HttpMethod.GET, "/roles").hasAuthority(UserRole.ADMIN.name)
-                    .requestMatchers(HttpMethod.DELETE, "/answers/**").hasAuthority(UserRole.ADMIN.name)
-                    .requestMatchers(HttpMethod.DELETE, "/topics/**").hasAuthority(UserRole.ADMIN.name)
+                    .requestMatchers("/boards/**").hasAuthority(UserRoleAuthority.ADMIN.name)
+                    .requestMatchers(HttpMethod.GET, "/roles/").hasAuthority(UserRoleAuthority.ADMIN.name)
+                    .requestMatchers(HttpMethod.GET, "/authors/").hasAuthority(UserRoleAuthority.ADMIN.name)
+                    .requestMatchers(HttpMethod.PUT, "/user-roles").hasAuthority(UserRoleAuthority.ADMIN.name)
+                    .requestMatchers(HttpMethod.DELETE, "/answers/**").hasAuthority(UserRoleAuthority.ADMIN.name)
+                    .requestMatchers(HttpMethod.DELETE, "/topics/**").hasAuthority(UserRoleAuthority.ADMIN.name)
                     .anyRequest().authenticated()
             }
             .addFilterBefore(JWTLoginFilter(authenticationManager = configuration.authenticationManager, jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass)

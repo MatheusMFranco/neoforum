@@ -1,0 +1,1 @@
+alter table author add constraint unique_email unique (email);

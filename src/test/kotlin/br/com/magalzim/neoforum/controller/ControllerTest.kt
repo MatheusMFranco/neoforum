@@ -4,6 +4,7 @@ import br.com.magalzim.neoforum.config.JWTUtil
 import br.com.magalzim.neoforum.configuration.DatabaseContainerConfiguration
 import br.com.magalzim.neoforum.model.AuthorTest
 import br.com.magalzim.neoforum.model.Role
+import br.com.magalzim.neoforum.model.UserRoleAuthority
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.put
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
@@ -33,11 +35,12 @@ class ControllerTest: DatabaseContainerConfiguration() {
     companion object {
         private const val TOPIC_RESOURCE = "/topics"
         private const val ANSWER_RESOURCE = "/answers/1"
+        private const val USEROLE_RESOURCE = "/user-roles"
     }
 
     @BeforeEach
     fun setup() {
-        token = generateToken()
+        token = generateToken(UserRoleAuthority.READ_AND_WRITE)
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .apply<DefaultMockMvcBuilder?>(
                 SecurityMockMvcConfigurers.springSecurity()
@@ -82,8 +85,32 @@ class ControllerTest: DatabaseContainerConfiguration() {
         }.andExpect { status { isOk() } }
     }
 
-    private fun generateToken(): String {
-        val authorities = mutableListOf(Role(1, "READ_AND_WRITE"))
+    @Test
+    fun `should return code 204 when set premium user`() {
+        token = generateToken(UserRoleAuthority.ADMIN)
+        mockMvc.put(USEROLE_RESOURCE.plus("%s").format("/premium/1")) {
+            headers { this.setBearerAuth(token.toString()) }
+        }.andExpect { status { is2xxSuccessful() } }
+    }
+
+    @Test
+    fun `should return code 204 when set default user`() {
+        token = generateToken(UserRoleAuthority.ADMIN)
+        mockMvc.put(USEROLE_RESOURCE.plus("%s").format("/default/1")) {
+            headers { this.setBearerAuth(token.toString()) }
+        }.andExpect { status { is2xxSuccessful() } }
+    }
+
+    @Test
+    fun `should return code 204 when set monitor user`() {
+        token = generateToken(UserRoleAuthority.ADMIN)
+        mockMvc.put(USEROLE_RESOURCE.plus("%s").format("/monitor/1")) {
+            headers { this.setBearerAuth(token.toString()) }
+        }.andExpect { status { is2xxSuccessful() } }
+    }
+
+    private fun generateToken(role: UserRoleAuthority): String {
+        val authorities = mutableListOf(Role(role.ordinal.toLong() + 1, role.name))
         val user = AuthorTest.buildToToken()
         return jwtUtil.generateToken(user.email, authorities)
     }

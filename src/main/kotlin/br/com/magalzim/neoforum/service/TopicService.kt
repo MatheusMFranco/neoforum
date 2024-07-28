@@ -6,9 +6,8 @@ import br.com.magalzim.neoforum.form.UpdateTopicForm
 import br.com.magalzim.neoforum.mapper.TopicFormMapper
 import br.com.magalzim.neoforum.mapper.TopicViewMapper
 import br.com.magalzim.neoforum.model.Topic
-import br.com.magalzim.neoforum.model.UserRole
+import br.com.magalzim.neoforum.model.UserRoleAuthority
 import br.com.magalzim.neoforum.repository.TopicRepository
-import br.com.magalzim.neoforum.view.AnswerView
 import br.com.magalzim.neoforum.view.TopicByBoardView
 import br.com.magalzim.neoforum.view.TopicView
 import org.springframework.cache.annotation.CacheEvict
@@ -83,7 +82,7 @@ class TopicService(
             repository.save(model)
             return topicViewMapper.map(model)
         }
-        throw Exception()
+        throw NotFoundException(Topic::class)
     }
 
     @CacheEvict(value=["topics"], allEntries = true)
@@ -98,8 +97,8 @@ class TopicService(
                 .authorities
                 .map { it.authority }
         val list = when {
-            roles.contains(UserRole.MONITOR.name) -> listOf(EVERYONE)
-            roles.contains(UserRole.PREMIUM.name) -> listOf(STAFF)
+            roles.contains(UserRoleAuthority.MONITOR.name) -> listOf(EVERYONE)
+            roles.contains(UserRoleAuthority.PREMIUM.name) -> listOf(STAFF)
             else -> listOf(STAFF, PREMIUM)
         }
         return repository.forums(list)

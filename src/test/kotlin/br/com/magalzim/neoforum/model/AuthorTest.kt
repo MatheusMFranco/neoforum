@@ -1,12 +1,14 @@
 package br.com.magalzim.neoforum.model
 
 object AuthorTest {
-    fun build() = Author(
+    private fun create(name: String) = Author(
         id = 1,
-        name = "Fox",
+        name = name,
         email = "fox@fox.com",
         avatar = "fox",
         password = "123456"
     )
-    fun buildToToken() = Author(name = "Fox", email = "fox@fox.com", password = "123456", avatar= "fox")
+    fun build() = create("Fox")
+    fun updated() = create("Matt")
+    fun buildToToken() = Author(name = "Fox", email = "admin@email.com", password = "123456", avatar= "fox")
 }
