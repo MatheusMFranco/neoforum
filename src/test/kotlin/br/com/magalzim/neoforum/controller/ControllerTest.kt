@@ -9,10 +9,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.put
+import org.springframework.test.web.servlet.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
@@ -33,6 +34,8 @@ class ControllerTest: DatabaseContainerConfiguration() {
     private var token: String? = null
 
     companion object {
+        private const val AUTHOR_RESOURCE = "/authors"
+        private const val BOARD_RESOURCE = "/boards/5"
         private const val TOPIC_RESOURCE = "/topics"
         private const val ANSWER_RESOURCE = "/answers/1"
         private const val USEROLE_RESOURCE = "/user-roles"
@@ -46,6 +49,53 @@ class ControllerTest: DatabaseContainerConfiguration() {
             .apply<DefaultMockMvcBuilder?>(
                 SecurityMockMvcConfigurers.springSecurity()
             ).build()
+    }
+
+    @Test
+    fun `should return code 201 when add author`() {
+        val newAuthorJson = """
+            {
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "password": "password123",
+                "avatar": "letitsnow"
+            }
+        """
+        mockMvc.perform(MockMvcRequestBuilders.post(AUTHOR_RESOURCE)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(newAuthorJson))
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+    }
+
+    @Test
+    fun `should return code 200 when login`() {
+        val newTopicJson = """
+            {
+                "username": "admin@email.com",
+                "password": "123456"
+            }
+        """
+        mockMvc.perform(MockMvcRequestBuilders.post("/login")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(newTopicJson))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+    }
+
+    @Test
+    fun `should return code 201 when add topic`() {
+        val newTopicJson = """
+            {
+                "boardId": 1,
+                "authorId": 1,
+                "title": "Este tópico vai explodir!",
+                "message": "This topic was closed by the administrator"
+            }
+        """
+        mockMvc.perform(MockMvcRequestBuilders.post(TOPIC_RESOURCE)
+            .header("Authorization", "Bearer $token")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(newTopicJson))
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
     }
 
     @Test
@@ -92,7 +142,7 @@ class ControllerTest: DatabaseContainerConfiguration() {
         mockMvc.put(USEROLE_RESOURCE.plus("%s").format("/premium/1")) {
             headers { this.setBearerAuth(token.toString()) }
         }.andExpect { status { is2xxSuccessful() } }
-    } 
+    }
 
     @Test
     fun `should return code 204 when set default user`() {
@@ -114,6 +164,30 @@ class ControllerTest: DatabaseContainerConfiguration() {
     fun `should return code 204 when find users by role`() {
         token = generateToken(UserRoleAuthority.ADMIN)
         mockMvc.get(ROLES_RESOURCE) {
+            headers { this.setBearerAuth(token.toString()) }
+        }.andExpect { status { is2xxSuccessful() } }
+    }
+
+    @Test
+    fun `should return code 204 when delete answer`() {
+        token = generateToken(UserRoleAuthority.ADMIN)
+        mockMvc.delete(ANSWER_RESOURCE) {
+            headers { this.setBearerAuth(token.toString()) }
+        }.andExpect { status { is2xxSuccessful() } }
+    }
+
+    @Test
+    fun `should return code 204 when delete topic`() {
+        token = generateToken(UserRoleAuthority.ADMIN)
+        mockMvc.delete(TOPIC_RESOURCE.plus("%s").format("/1")) {
+            headers { this.setBearerAuth(token.toString()) }
+        }.andExpect { status { is2xxSuccessful() } }
+    }
+
+    @Test
+    fun `should return code 204 when delete board`() {
+        token = generateToken(UserRoleAuthority.ADMIN)
+        mockMvc.delete(BOARD_RESOURCE) {
             headers { this.setBearerAuth(token.toString()) }
         }.andExpect { status { is2xxSuccessful() } }
     }
