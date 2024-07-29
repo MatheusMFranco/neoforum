@@ -1,8 +1,10 @@
 package br.com.magalzim.neoforum.integration
 
 import br.com.magalzim.neoforum.model.AnswerTest
+import br.com.magalzim.neoforum.model.AuthorTest
 import br.com.magalzim.neoforum.model.TopicTest
 import br.com.magalzim.neoforum.repository.AnswerRepository
+import br.com.magalzim.neoforum.repository.AuthorRepository
 import br.com.magalzim.neoforum.repository.TopicRepository
 import br.com.magalzim.neoforum.view.TopicByBoardView
 import org.assertj.core.api.Assertions
@@ -29,8 +31,12 @@ class RepositoryTest {
     @Autowired
     private lateinit var topicRepository: TopicRepository
 
+    @Autowired
+    private lateinit var authorRepository: AuthorRepository
+
     private val answer = AnswerTest.build()
     private val topic = TopicTest.build()
+    private val author = AuthorTest.build()
 
     companion object {
         @Container
@@ -83,5 +89,11 @@ class RepositoryTest {
         topicRepository.save(topic)
         val foundTopics = topicRepository.findByBoardId(1, PageRequest.of(0, 5))
         Assertions.assertThat(foundTopics).isNotEmpty
+    }
+
+    @Test
+    fun `should list authors by role`() {
+        val foundAuthors = authorRepository.findAuthorWithRoles(1)
+        Assertions.assertThat(foundAuthors).isNotEmpty
     }
 }

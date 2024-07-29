@@ -25,6 +25,7 @@ class AuthorServiceTest {
 
     private val updatedAuthor = AuthorTest.updated()
     private val newAuthor = AuthorTest.build()
+    private val roles = listOf(AuthorTest.roles())
 
     private val authorRepository: AuthorRepository = mockk{
         every { findAll(pagination) } returns authors
@@ -32,6 +33,7 @@ class AuthorServiceTest {
         every { getReferenceById(any()) } returns newAuthor
         every { findById(any()) } returns Optional.of(updatedAuthor)
         every { save(any()) } returns updatedAuthor
+        every { findAuthorWithRoles(any()) } returns roles
     }
 
     private val authorViewMapper: AuthorViewMapper = mockk{
@@ -111,6 +113,12 @@ class AuthorServiceTest {
             authorService.update(UpdateAuthorFormTest.empty())
         }
         Assertions.assertThat(current.message).isEqualTo("Author ID not found!")
+    }
+
+    @Test
+    fun `should list authors by role`() {
+        authorService.roles(1)
+        verify(exactly = 1) { authorRepository.findAuthorWithRoles(any()) }
     }
 
 }

@@ -1,0 +1,61 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <title>Neoforum</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+            .container {
+                margin-top: 20px;
+            }
+            .table thead th {
+                background-color: #007bff;
+                color: #ffffff;
+            }
+            .table tbody tr:nth-child(odd) {
+                background-color: #f2f2f2;
+            }
+            .no-content {
+                text-align: center;
+                font-style: italic;
+                color: #6c757d;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="my-4 text-center">Author by Role</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${authorsByRoles.empty}">
+                            <td colspan="3" class="no-content">No content available</td>
+                        </tr>
+                        <tr th:each="authorRole : ${authorsByRoles}">
+                            <td th:text="${authorRole.authorId}"></td>
+                            <td th:text="${authorRole.email}"></td>
+                            <td th:text="${authorRole.roleName}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>

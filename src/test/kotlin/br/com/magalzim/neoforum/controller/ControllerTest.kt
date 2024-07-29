@@ -36,6 +36,7 @@ class ControllerTest: DatabaseContainerConfiguration() {
         private const val TOPIC_RESOURCE = "/topics"
         private const val ANSWER_RESOURCE = "/answers/1"
         private const val USEROLE_RESOURCE = "/user-roles"
+        private const val ROLES_RESOURCE = "/roles/1"
     }
 
     @BeforeEach
@@ -105,6 +106,14 @@ class ControllerTest: DatabaseContainerConfiguration() {
     fun `should return code 204 when set monitor user`() {
         token = generateToken(UserRoleAuthority.ADMIN)
         mockMvc.put(USEROLE_RESOURCE.plus("%s").format("/monitor/1")) {
+            headers { this.setBearerAuth(token.toString()) }
+        }.andExpect { status { is2xxSuccessful() } }
+    }
+
+    @Test
+    fun `should return code 204 when find users by role`() {
+        token = generateToken(UserRoleAuthority.ADMIN)
+        mockMvc.get(ROLES_RESOURCE) {
             headers { this.setBearerAuth(token.toString()) }
         }.andExpect { status { is2xxSuccessful() } }
     }

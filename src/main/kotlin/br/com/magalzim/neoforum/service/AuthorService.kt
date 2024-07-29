@@ -7,6 +7,7 @@ import br.com.magalzim.neoforum.mapper.AuthorFormMapper
 import br.com.magalzim.neoforum.mapper.AuthorViewMapper
 import br.com.magalzim.neoforum.model.*
 import br.com.magalzim.neoforum.repository.AuthorRepository
+import br.com.magalzim.neoforum.view.AuthorByRoleView
 import br.com.magalzim.neoforum.view.AuthorView
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -55,5 +56,7 @@ class AuthorService(
         }
         throw NotFoundException(Author::class)
     }
+
+    fun roles(id: Long): List<AuthorByRoleView> = repository.findAuthorWithRoles(id)
 
 }
