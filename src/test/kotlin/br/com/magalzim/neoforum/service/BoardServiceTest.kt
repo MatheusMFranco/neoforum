@@ -20,6 +20,7 @@ class BoardServiceTest {
     private var boardRepository: BoardRepository = mockk{
         every { findById(any()) } returns Optional.of(updatedBoard)
         every { save(any()) } returns updatedBoard
+        every { deleteById(any()) } just Runs
     }
 
     private var boardViewMapper: BoardViewMapper = mockk{
@@ -41,6 +42,12 @@ class BoardServiceTest {
             boardService.update(UpdateBoardFormTest.empty())
         }
         Assertions.assertEquals(current.message, "Board ID not found!")
+    }
+
+    @Test
+    fun `should delete a board`() {
+        boardService.delete(1)
+        verify(exactly = 1) { boardRepository.deleteById(any()) }
     }
 
 }

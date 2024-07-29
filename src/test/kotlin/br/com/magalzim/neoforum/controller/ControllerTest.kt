@@ -91,7 +91,7 @@ class ControllerTest: DatabaseContainerConfiguration() {
         mockMvc.put(USEROLE_RESOURCE.plus("%s").format("/premium/1")) {
             headers { this.setBearerAuth(token.toString()) }
         }.andExpect { status { is2xxSuccessful() } }
-    }
+    } 
 
     @Test
     fun `should return code 204 when set default user`() {

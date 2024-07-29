@@ -7,6 +7,7 @@ import br.com.magalzim.neoforum.model.*
 import br.com.magalzim.neoforum.repository.BoardRepository
 import br.com.magalzim.neoforum.view.BoardView
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
 
 @Service
@@ -38,4 +39,7 @@ class BoardService(
         throw NotFoundException(Board::class)
     }
 
+    fun delete(id: Long) {
+        repository.deleteById(id)
+    }
 }

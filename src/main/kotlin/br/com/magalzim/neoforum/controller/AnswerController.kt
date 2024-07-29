@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
@@ -36,6 +37,13 @@ class AnswerController(private val service: AnswerService) {
     fun update(@RequestBody @Valid answer: UpdateAnswerForm): ResponseEntity<AnswerView> {
         val view = service.update(answer)
         return ResponseEntity.ok(view)
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    fun delete(@PathVariable id: Long) {
+        service.delete(id)
     }
 
     @GetMapping("/{id}")

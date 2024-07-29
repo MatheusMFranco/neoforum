@@ -33,6 +33,7 @@ class AnswerServiceTest {
         every { save(any()) } returns newAnswer
         every { findByTopicId(any(), any()) } returns answer
         every { findAll(pagination) } returns answer
+        every { deleteById(any()) } just Runs
     }
 
     private var answerViewMapper: AnswerViewMapper = mockk{
@@ -81,6 +82,12 @@ class AnswerServiceTest {
             answerService.update(UpdateAnswerFormTest.empty())
         }
         Assertions.assertEquals(current.message, "Answer ID not found!")
+    }
+
+    @Test
+    fun `should delete a answer`() {
+        answerService.delete(1)
+        verify(exactly = 1) { answerRepository.deleteById(any()) }
     }
 
 }

@@ -38,6 +38,10 @@ class AnswerService(
         throw NotFoundException(Answer::class)
     }
 
+    fun delete(id: Long) {
+        repository.deleteById(id)
+    }
+
     fun list(
         topicId: Long,
         pagination: Pageable

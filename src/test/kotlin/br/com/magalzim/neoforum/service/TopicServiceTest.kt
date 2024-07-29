@@ -13,10 +13,7 @@ import br.com.magalzim.neoforum.service.TopicService.Companion.PREMIUM
 import br.com.magalzim.neoforum.service.TopicService.Companion.STAFF
 import br.com.magalzim.neoforum.view.TopicByBoardViewTest
 import br.com.magalzim.neoforum.view.TopicViewTest
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
+import io.mockk.*
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -48,6 +45,7 @@ class TopicServiceTest {
         every { forums(listOf(STAFF, PREMIUM)) } returns forumsEveryone
         every { findById(any()) } returns Optional.of(updatedTopic)
         every { save(any()) } returns updatedTopic
+        every { deleteById(any()) } just Runs
     }
 
     private val topicViewMapper: TopicViewMapper = mockk{
@@ -157,6 +155,12 @@ class TopicServiceTest {
         verify(exactly = 1) { topicRepository.findByBoardId(any(), any()) }
         verify(exactly = 1) { topicViewMapper.map(any()) }
         verify(exactly = 0) { topicRepository.findAll(pagination) }
+    }
+
+    @Test
+    fun `should delete a topic`() {
+        topicService.delete(1)
+        verify(exactly = 1) { topicRepository.deleteById(any()) }
     }
 
 }

@@ -4,6 +4,7 @@ import br.com.magalzim.neoforum.form.UpdateBoardForm
 import br.com.magalzim.neoforum.service.BoardService
 import br.com.magalzim.neoforum.view.BoardView
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
@@ -17,6 +18,13 @@ class BoardController(private val service: BoardService) {
     fun update(@RequestBody @Valid board: UpdateBoardForm): ResponseEntity<BoardView> {
         val view = service.update(board)
         return ResponseEntity.ok(view)
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    fun delete(@PathVariable id: Long) {
+        service.delete(id)
     }
 
 }
