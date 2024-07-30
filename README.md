@@ -128,3 +128,5 @@ docker run -p 8080:8080 matheusmagal/neoforum-dev
 
 ## Accessing the Application in Production
 The application is hosted and accessible online. You can view the live version of the application at: [Neoforum API](https://neoforum-d6443e11a63d.herokuapp.com/swagger-ui/index.html).
+
+<img width="200" src="https://media4.giphy.com/media/qxCOtKcrqpGvwxlZhy/giphy.gif?cid=6c09b9528dzzns6imyjxp91syh9rxsyhmc6hd9zpqyfcjeoj&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=s" />
