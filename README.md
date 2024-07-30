@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<div align="center">
 
 # Neoforum
 
@@ -8,9 +8,9 @@
 
 [![Basic validation](https://github.com/actions/labeler/actions/workflows/basic-validation.yml/badge.svg?branch=main)](https://github.com/actions/labeler/actions/workflows/basic-validation.yml)
 
-This API is inspired by Neoboards from Neopets. It provides endpoints to:
 </div>
 
+This API is inspired by Neoboards from Neopets. It provides endpoints to:
 - Consult Boards: Retrieve information about various boards;
 - Consult Topics: Access details of topics within boards;
 - Consult Answers: View responses to topics and answers;
