@@ -35,7 +35,7 @@ class ControllerTest: DatabaseContainerConfiguration() {
 
     companion object {
         private const val AUTHOR_RESOURCE = "/authors"
-        private const val BOARD_RESOURCE = "/boards/5"
+        private const val BOARD_RESOURCE = "/boards"
         private const val TOPIC_RESOURCE = "/topics"
         private const val ANSWER_RESOURCE = "/answers/1"
         private const val USEROLE_RESOURCE = "/user-roles"
@@ -56,12 +56,49 @@ class ControllerTest: DatabaseContainerConfiguration() {
         val newAuthorJson = """
             {
                 "name": "John Doe",
-                "email": "john.doe@example.com",
+                "email": "john.does@example.com",
                 "password": "password123",
                 "avatar": "letitsnow"
             }
         """
         mockMvc.perform(MockMvcRequestBuilders.post(AUTHOR_RESOURCE)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(newAuthorJson))
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+    }
+
+    @Test
+    fun `should return code 200 when update author`() {
+        val newAuthorJson = """
+            {
+                "id": 1,
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "password": "password123",
+                "avatar": "letitsnow"
+            }
+        """
+        token = generateToken(UserRoleAuthority.ADMIN)
+        mockMvc.perform(MockMvcRequestBuilders.put(AUTHOR_RESOURCE)
+            .header("Authorization", "Bearer $token")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(newAuthorJson))
+            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+    }
+
+    @Test
+    fun `should return code 200 when update board`() {
+        val newAuthorJson = """
+            {
+                "id": 4,
+                "name": "Arte Special",
+                "description": "Conteudo artisticamente artistico",
+                "icon": "newTnt"
+            }
+        """
+        token = generateToken(UserRoleAuthority.ADMIN)
+        mockMvc.perform(MockMvcRequestBuilders.put(BOARD_RESOURCE)
+            .header("Authorization", "Bearer $token")
             .contentType(MediaType.APPLICATION_JSON)
             .content(newAuthorJson))
             .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
@@ -79,23 +116,6 @@ class ControllerTest: DatabaseContainerConfiguration() {
             .contentType(MediaType.APPLICATION_JSON)
             .content(newTopicJson))
             .andExpect(MockMvcResultMatchers.status().isOk())
-    }
-
-    @Test
-    fun `should return code 201 when add topic`() {
-        val newTopicJson = """
-            {
-                "boardId": 1,
-                "authorId": 1,
-                "title": "Este tópico vai explodir!",
-                "message": "This topic was closed by the administrator"
-            }
-        """
-        mockMvc.perform(MockMvcRequestBuilders.post(TOPIC_RESOURCE)
-            .header("Authorization", "Bearer $token")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(newTopicJson))
-            .andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
     }
 
     @Test
@@ -177,17 +197,9 @@ class ControllerTest: DatabaseContainerConfiguration() {
     }
 
     @Test
-    fun `should return code 204 when delete topic`() {
-        token = generateToken(UserRoleAuthority.ADMIN)
-        mockMvc.delete(TOPIC_RESOURCE.plus("%s").format("/1")) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { is2xxSuccessful() } }
-    }
-
-    @Test
     fun `should return code 204 when delete board`() {
         token = generateToken(UserRoleAuthority.ADMIN)
-        mockMvc.delete(BOARD_RESOURCE) {
+        mockMvc.delete(BOARD_RESOURCE.plus("%s").format("/5")) {
             headers { this.setBearerAuth(token.toString()) }
         }.andExpect { status { is2xxSuccessful() } }
     }
