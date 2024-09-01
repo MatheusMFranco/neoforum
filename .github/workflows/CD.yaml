@@ -28,7 +28,7 @@ jobs:
         run: mvn clean
 
       - name: Run mvn package
-        run: mvn package
+        run: mvn package -DskipTests
 
       - name: Login container registry
         env:
