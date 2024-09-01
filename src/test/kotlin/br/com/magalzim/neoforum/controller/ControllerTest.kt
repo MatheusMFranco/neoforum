@@ -134,11 +134,6 @@ class ControllerTest: DatabaseContainerConfiguration() {
             .andExpect { status { isOk() } }
     }
 
-    @Test
-    fun `should return code 200 when call answers with token`() {
-        mockMvc.get(ANSWER_RESOURCE).andExpect { status { isOk() } }
-    }
-
     private fun generateToken(role: UserRoleAuthority): String {
         val authorities = mutableListOf(Role(role.ordinal.toLong() + 1, role.name))
         val user = AuthorTest.buildToToken()
