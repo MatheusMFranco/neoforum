@@ -124,10 +124,8 @@ class ControllerTest: DatabaseContainerConfiguration() {
     }
 
     @Test
-    fun `should return code 200 when call forums with token`() {
-        mockMvc.get(TOPIC_RESOURCE.plus("%s").format("/forums")) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { isOk() } }
+    fun `should return code 200 when call forums`() {
+        mockMvc.get("/forums").andExpect { status { isOk() } }
     }
 
     @Test
