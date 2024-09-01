@@ -37,10 +37,10 @@ class SecurityConfiguration (
                     .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/forums").permitAll()
                     .requestMatchers(HttpMethod.GET, "/answers/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/topics/**").permitAll()
 
                     .requestMatchers(HttpMethod.PUT, "/authors").hasAuthority(UserRoleAuthority.READ_AND_WRITE.name)
                     .requestMatchers(HttpMethod.GET, "/authors/{id}").hasAuthority(UserRoleAuthority.READ_AND_WRITE.name)
-                    .requestMatchers("/topics/**").hasAuthority(UserRoleAuthority.READ_AND_WRITE.name)
 
                     .requestMatchers("/premium/**").hasAuthority(UserRoleAuthority.PREMIUM.name)
 
