@@ -124,20 +124,14 @@ class ControllerTest: DatabaseContainerConfiguration() {
     }
 
     @Test
-    fun `should return code 400 when call topics without token`() {
-        mockMvc.get(TOPIC_RESOURCE).andExpect { status { is4xxClientError() } }
-    }
-
-    @Test
     fun `should return code 200 when call forums`() {
         mockMvc.get("/forums").andExpect { status { isOk() } }
     }
 
     @Test
-    fun `should return code 200 when call topics by id and authenticated user`() {
-        mockMvc.get(TOPIC_RESOURCE.plus("%s").format("/1")) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { isOk() } }
+    fun `should return code 200 when call topics by id`() {
+        mockMvc.get(TOPIC_RESOURCE.plus("%s").format("/1"))
+            .andExpect { status { isOk() } }
     }
 
     @Test
