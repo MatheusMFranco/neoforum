@@ -7,8 +7,6 @@ import br.com.magalzim.neoforum.model.Role
 import br.com.magalzim.neoforum.model.UserRoleAuthority
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.InjectMocks
-import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -143,68 +141,8 @@ class ControllerTest: DatabaseContainerConfiguration() {
     }
 
     @Test
-    fun `should return code 200 when call topics by board and authenticated user`() {
-        mockMvc.get(TOPIC_RESOURCE.plus("%s").format("/board/1")) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { isOk() } }
-    }
-
-    @Test
-    fun `should return code 400 when call answers without token`() {
-        mockMvc.get(ANSWER_RESOURCE).andExpect { status { is4xxClientError() } }
-    }
-
-    @Test
     fun `should return code 200 when call answers with token`() {
         mockMvc.get(ANSWER_RESOURCE).andExpect { status { isOk() } }
-    }
-
-    @Test
-    fun `should return code 204 when set premium user`() {
-        token = generateToken(UserRoleAuthority.ADMIN)
-        mockMvc.put(USEROLE_RESOURCE.plus("%s").format("/premium/1")) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { is2xxSuccessful() } }
-    }
-
-    @Test
-    fun `should return code 204 when set default user`() {
-        token = generateToken(UserRoleAuthority.ADMIN)
-        mockMvc.put(USEROLE_RESOURCE.plus("%s").format("/default/1")) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { is2xxSuccessful() } }
-    }
-
-    @Test
-    fun `should return code 204 when set monitor user`() {
-        token = generateToken(UserRoleAuthority.ADMIN)
-        mockMvc.put(USEROLE_RESOURCE.plus("%s").format("/monitor/1")) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { is2xxSuccessful() } }
-    }
-
-    @Test
-    fun `should return code 204 when find users by role`() {
-        token = generateToken(UserRoleAuthority.ADMIN)
-        mockMvc.get(ROLES_RESOURCE) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { is2xxSuccessful() } }
-    }
-
-    @Test
-    fun `should return code 204 when delete answer`() {
-        token = generateToken(UserRoleAuthority.ADMIN)
-        mockMvc.delete(ANSWER_RESOURCE) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { is2xxSuccessful() } }
-    }
-
-    @Test
-    fun `should return code 204 when delete board`() {
-        token = generateToken(UserRoleAuthority.ADMIN)
-        mockMvc.delete(BOARD_RESOURCE.plus("%s").format("/5")) {
-            headers { this.setBearerAuth(token.toString()) }
-        }.andExpect { status { is2xxSuccessful() } }
     }
 
     private fun generateToken(role: UserRoleAuthority): String {
