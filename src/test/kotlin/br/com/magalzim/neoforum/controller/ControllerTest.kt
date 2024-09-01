@@ -7,6 +7,9 @@ import br.com.magalzim.neoforum.model.Role
 import br.com.magalzim.neoforum.model.UserRoleAuthority
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
@@ -31,6 +34,7 @@ class ControllerTest: DatabaseContainerConfiguration() {
 
     private lateinit var mockMvc: MockMvc
 
+
     private var token: String? = null
 
     companion object {
@@ -44,6 +48,9 @@ class ControllerTest: DatabaseContainerConfiguration() {
 
     @BeforeEach
     fun setup() {
+        MockitoAnnotations.openMocks(this)
+        jwtUtil.secret = "2a12Dpr9yBjZksrrC34hnQEG1uDyF5HKckz3Cob4j5md1Jl3jXPF1ejzi"
+        jwtUtil.init()
         token = generateToken(UserRoleAuthority.READ_AND_WRITE)
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .apply<DefaultMockMvcBuilder?>(
