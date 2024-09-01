@@ -156,6 +156,7 @@ class ControllerTest: DatabaseContainerConfiguration() {
 
     @Test
     fun `should return code 200 when call answers with token`() {
+        token = generateToken(UserRoleAuthority.ADMIN)
         mockMvc.get(ANSWER_RESOURCE) {
             headers { this.setBearerAuth(token.toString()) }
         }.andExpect { status { isOk() } }
