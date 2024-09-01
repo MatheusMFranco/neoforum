@@ -33,4 +33,4 @@ spring:
             enable: true
 flyway.locations.filesystem: db/migration
 jwt:
-  secret: secret
+  secret: 2a12Dpr9yBjZksrrC34hnQEG1uDyF5HKckz3Cob4j5md1Jl3jXPF1ejzi
